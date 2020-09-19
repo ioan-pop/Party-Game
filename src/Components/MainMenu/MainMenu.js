@@ -90,7 +90,7 @@ function MainMenu(props) {
                                 </div>
                             ) : null
                         }
-                        <div style={{backgroundColor: "rgba(255,255,255,0.1)", padding: "10px 0px", margin: "20px 0px"}}>
+                        <div style={{backgroundColor: "rgba(255,255,255,0.1)", padding: "10px 0px", margin: "20px 0px", backdropFilter: "blur(10px)"}}>
                             <h3>Players ({(gameMetaData && gameMetaData.players.length) || '-'})</h3>
                             {
                                 gameMetaData ? (

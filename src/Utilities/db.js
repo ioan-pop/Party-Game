@@ -1,4 +1,6 @@
 import firebase from 'firebase';
+import 'firebase/database';
+import 'firebase/firestore';
 
 // TODO: Figure out how to authenticate per user and only allow access to their game session
 var config = {

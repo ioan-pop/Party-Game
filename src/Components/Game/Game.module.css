@@ -8,6 +8,7 @@
     position: relative;
     font-weight: 700;
     margin-bottom: 300px;
+    box-shadow: 5px 5px 0px #f39c12;
 }
 
 .activeCardText {
@@ -23,13 +24,14 @@
     bottom: 0px;
     left: 0px;
     width: 100%;
-    height: 210px;
+    height: 230px;
     padding: 5px 0px;
     box-sizing: border-box;
     overflow-x: scroll;
     overflow-y: hidden;
     display: flex;
     background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 .playerCard {
@@ -38,8 +40,9 @@
     height: 200px;
     border-radius: 10px;
     position: relative;
-    margin: 0px 5px;
+    margin: 5px 10px;
     flex: 0 0 150px;
+    box-shadow: 5px 5px 0px #9b59b6;
 }
 
 .playerCardText {
