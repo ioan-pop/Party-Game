@@ -1,0 +1,51 @@
+.activeCard {
+    background-color: #D2D0CC;
+    color: black;
+    height: 300px;
+    width: 300px;
+    margin: 30px auto;
+    border-radius: 20px;
+    position: relative;
+    font-weight: 700;
+    margin-bottom: 300px;
+}
+
+.activeCardText {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    transform: translate(-50%, -50%);
+}
+
+.playerHand {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 210px;
+    padding: 5px 0px;
+    box-sizing: border-box;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    display: flex;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.playerCard {
+    background-color: #D2D0CC;
+    color: black;
+    height: 200px;
+    border-radius: 10px;
+    position: relative;
+    margin: 0px 5px;
+    flex: 0 0 150px;
+}
+
+.playerCardText {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    transform: translate(-50%, -50%);
+}

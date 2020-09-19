@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Bungee+Outline&family=Comfortaa:wght@300;400;700&family=Lemonada:wght@300;400;700&family=Open+Sans:wght@300;400;700&display=swap');
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,9 +7,64 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #10161C;
+  color: white;
+  font-size: 30px;
+  font-family: 'Comfortaa', cursive;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Bungee Outline', cursive;
+  text-shadow: 3px -3px #e74c3c, -3px 3px #3498db;
+}
+
+p {
+  font-family: 'Open Sans', sans-serif;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+button {
+  padding: 10px 30px;
+  margin: 10px;
+  border: 2px solid #FFE57B;
+  /* box-shadow: 0px 0px 5px #A3FF53; */
+  background-color: transparent;
+  color: #FFE57B;
+  border-radius: 5px;
+  font-size: 30px;
+  font-family: 'Lemonada', cursive;
+  font-weight: 700;
+  width: calc(100% - 20px);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0px 0px 10px #FFE57B;
+}
+
+input {
+    font-size: 30px;
+    margin: 10px;
+    padding: 10px 30px;
+    text-align: center;
+    border: 2px solid #A3FF53;
+    border-radius: 5px;
+    color: white;
+    background-color: transparent;
+    width: calc(100% - 20px);
+    box-sizing: border-box;
+}
+
+input:focus {
+    outline: none;  
+}
+
+.redText {
+    color: #e74c3c;
 }

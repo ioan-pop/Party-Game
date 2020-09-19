@@ -1,26 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import MainMenu from './Components/MainMenu/MainMenu';
+import Game from './Components/Game/Game';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
+// TODO: Remove the app component and include the main menu inside index.js
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	return (
+		<BrowserRouter>
+			<div className="App">
+				<Switch>
+					<Route path="/game" component={Game} />
+					<Route path="/" component={MainMenu} />
+				</Switch>
+			</div>
+		</BrowserRouter>
+	);
 }
 
 export default App;
