@@ -1,3 +1,16 @@
+.turnCounter {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    border-bottom-left-radius: 5px;
+    background-color: #2ecc71;
+    padding: 5px;
+    z-index: 100;
+    font-size: 0.8em;
+    border-left: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
 .activeCard {
     background-color: #D2D0CC;
     color: black;
@@ -9,6 +22,7 @@
     font-weight: 700;
     margin-bottom: 300px;
     box-shadow: 5px 5px 0px #f39c12;
+    border: 1px solid black;
 }
 
 .activeCardText {
@@ -19,7 +33,7 @@
     transform: translate(-50%, -50%);
 }
 
-.playerHand {
+.cardsHand {
     position: fixed;
     bottom: 0px;
     left: 0px;
@@ -32,6 +46,19 @@
     display: flex;
     background-color: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
+    border-top: 1px solid black;
+}
+
+.handHeader {
+    position: fixed;
+    bottom: 230px;
+    left: 0px;
+    padding: 5px;
+    background-color: #2ecc71;
+    border-top-right-radius: 5px;
+    font-weight: 300;
+    border-top: 1px solid black;
+    border-right: 1px solid black;
 }
 
 .playerCard {
@@ -43,6 +70,7 @@
     margin: 5px 10px;
     flex: 0 0 150px;
     box-shadow: 5px 5px 0px #9b59b6;
+    border: 1px solid black;
 }
 
 .playerCardText {

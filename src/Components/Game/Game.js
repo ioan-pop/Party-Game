@@ -9,6 +9,8 @@ function Game(props) {
     const [answerCards, setAnswerCards] = useState();
     const [countdown, setCountdown] = useState();
     const [playerCards, setPlayerCards] = useState();
+    const [gameMetaData, setGameMetaData] = useState();
+    const [myTurn, setMyTurn] = useState(false);
 
     let countdownInterval = undefined;
 
@@ -32,7 +34,6 @@ function Game(props) {
         
         Promise.all(promises).then(() => {
             setDataLoaded(true);
-            startCountdown();
         });
 
         return () => {
@@ -61,14 +62,34 @@ function Game(props) {
         if (gameData.players[currentPlayerIndex].cards) {
             setPlayerCards(gameData.players[currentPlayerIndex].cards);
         }
+
+        setGameMetaData(gameData);
+
+        if(!countdownInterval) {
+            startCountdown(gameData);
+        }
+        
+        checkIfMyTurn(gameData);
     };
 
-    let startCountdown = () => {
-        setCountdown(60);
+    let startCountdown = (gameData) => {
+        let secondsDiffToEndOfTurn = parseInt((gameData.currentTurn.startTime / 1000 + gameData.turnTimeLimit) - +new Date()/1000);
+        setCountdown(secondsDiffToEndOfTurn <= 0 ? 0 : secondsDiffToEndOfTurn);
 
         countdownInterval = setInterval(() => {
             setCountdown(prevState => prevState <= 0 ? 0 : prevState - 1);
         }, 1000);
+    };
+
+    let checkIfMyTurn = (gameData) => {
+        let currentTurnPlayerID = gameData.currentTurn.player.id;
+        let myID = sessionStorage.getItem('playerID');
+
+        if (currentTurnPlayerID === myID) {
+            setMyTurn(true);
+            let questionIndex = Math.floor(Math.random() * (questionCards.length))
+            db().setCurrentTurnQuestion(gameData.gameID, questionCards[questionIndex].data);
+        }
     };
 
     let getGameID = () => {
@@ -82,27 +103,46 @@ function Game(props) {
             <h1>Game</h1>
             {dataLoaded ? (
                 <div>
+                    <div className={styles.turnCounter}>
+                        <span style={{fontWeight:300}}>Turns Left:</span> <span style={{fontWeight:900}}>{gameMetaData ? gameMetaData.turnsLeft : '-'}</span>
+                    </div>
                     <div>
-                        Bob's turn
+                        {myTurn ? 'Your' : ((gameMetaData ? gameMetaData.currentTurn.player.name : '-') + "'s")} turn
                         <div style={{marginTop: "25px", fontSize: "2em"}} className={countdown <= 5 ? 'redText' : null}>
                             {countdown}
                         </div>
                     </div>
                     <div className={styles.activeCard}>
                         <div className={styles.activeCardText}>
-                            Test Question
+                            {gameMetaData && gameMetaData.currentTurn.question ? gameMetaData.currentTurn.question : 'Picking question...'}
                         </div>
                     </div>
-                    <div className={styles.playerHand}>
+                    <div className={styles.handHeader}>
+                        {myTurn ? 'Player Answers' : 'Your Cards'}
+                    </div>
+                    <div className={styles.cardsHand}>
                         {
-                            playerCards ?
-                            playerCards.map((card, index) => (
-                                <div key={index} className={styles.playerCard}>
-                                    <div className={styles.playerCardText}>
-                                        {card.data}
+                            myTurn ?
+                            (
+                                gameMetaData.currentTurn.answers && gameMetaData.currentTurn.answers.length ? 
+                                gameMetaData.currentTurn.answers.map((answer, index) => (
+                                    <div key={index} className={styles.playerCard}>
+                                        <div className={styles.playerCardText}>
+                                            {answer}
+                                        </div>
                                     </div>
-                                </div>
-                            )) : <div style={{width: "100%"}}>Loading your cards...</div>
+                                )) : 
+                                <div style={{width: "100%", marginTop: "20px"}}>Players are picking answers...</div>
+                            ): (
+                                playerCards ?
+                                playerCards.map((card, index) => (
+                                    <div key={index} className={styles.playerCard}>
+                                        <div className={styles.playerCardText}>
+                                            {card.data}
+                                        </div>
+                                    </div>
+                                )) : <div style={{width: "100%", marginTop: "20px"}}>Loading your cards...</div>
+                            )
                         }
                     </div>
                 </div>

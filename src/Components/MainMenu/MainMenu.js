@@ -147,7 +147,6 @@ function MainMenu(props) {
             <h1 className={styles.MainMenuTitle}>
                 {title}
             </h1>
-            {stage}
             {stageData}
         </div>
     );

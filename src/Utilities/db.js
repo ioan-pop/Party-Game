@@ -23,6 +23,12 @@ let dbFunctions = () => {
                 gameID,
                 hostID: host.id,
                 createdOn: +new Date(),
+                currentTurn: {
+                    player: {
+                        id: host.id,
+                        name: host.name
+                    }
+                },
                 players: [
                     {
                         id: host.id,
@@ -44,10 +50,13 @@ let dbFunctions = () => {
             });
         },
         startGame: (gameID) => {
+            // TODO: Pass in number of turns. This can be configured in pre game lobby by host (and maybe other settings)
             fbRealtimeDB.ref('activeGames/' + gameID).once('value', (snapshot) => {
                 let gameSnapshot = snapshot.val();
                 gameSnapshot.startedAt = +new Date();
                 gameSnapshot.turnsLeft = 20;
+                gameSnapshot.turnTimeLimit = 120;
+                gameSnapshot.currentTurn.startTime = +new Date();
 
                 fbRealtimeDB.ref('activeGames/' + gameID).set(
                     gameSnapshot
@@ -100,6 +109,16 @@ let dbFunctions = () => {
                 }).catch(error => {
                     reject(error);
                 });
+            });
+        },
+        setCurrentTurnQuestion: (gameID, question) => {
+            fbRealtimeDB.ref('activeGames/' + gameID + '/currentTurn').once('value', (snapshot) => {
+                let currentTurnData = snapshot.val();
+                currentTurnData.question = question;
+
+                fbRealtimeDB.ref('activeGames/' + gameID + '/currentTurn').set(
+                    currentTurnData
+                );
             });
         }
     }
