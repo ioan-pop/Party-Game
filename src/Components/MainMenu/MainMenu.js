@@ -4,6 +4,8 @@ import db from '../../Utilities/db';
 import { v4 as uuid } from 'uuid';
 import { withRouter } from 'react-router-dom';
 
+let mounted = true;
+
 function MainMenu(props) {
     const [stage, setStage] = useState();
     const [stageData, setStageData] = useState(
@@ -22,6 +24,12 @@ function MainMenu(props) {
     const gameIDEl = useRef(null);
 
     useEffect(() => {
+        return () => {
+            mounted = false;
+        };
+    }, []);
+
+    useEffect(() => {
         let createGame = () => {
             // Converts the date to an int and converts it to base 36, to make it as short as possible
             let gameID = (+new Date()).toString(36);
@@ -33,6 +41,7 @@ function MainMenu(props) {
             setGameID(gameID);
             setStage('lobby');
             setMyID(playerID);
+            sessionStorage.setItem('playerID', playerID);
         };
     
         let joinGame = () => {
@@ -40,17 +49,22 @@ function MainMenu(props) {
     
             db().joinGame(gameIDEl.current.value, { name: joinNameEl.current.value, id: playerID })
             db().getMetaUpdates(gameIDEl.current.value, gameLobbyUpdate);
-    
+            
+            setGameID(gameIDEl.current.value);
             setStage('lobby');
             setMyID(playerID);
+            sessionStorage.setItem('playerID', playerID);
         };
     
         let gameLobbyUpdate = (gameMD) => {
-            setGameMetaData(gameMD);
+            if(mounted) {
+                setGameMetaData(gameMD);
+            }
         };
 
         let startGame = () => {
-            props.history.push('/game');
+            db().startGame(gameID);
+            props.history.push('/game/' + gameID);
         };
 
         switch(stage) {
@@ -109,7 +123,9 @@ function MainMenu(props) {
                             }
                         </div>
                         {
-                            myID === gameMetaData.hostID ? <button onClick={startGame}>Start Game</button> : null
+                            gameMetaData && (myID === gameMetaData.hostID) ? 
+                            <button onClick={startGame}>Start Game</button> : 
+                            <div>Waiting for host to start game</div>
                         }
                     </div>
                 );
@@ -117,6 +133,13 @@ function MainMenu(props) {
             default:
                 break;
         }
+
+        return () => {
+            // If a player is in the lobby and the game has started, route to the game page
+            if(stage === 'lobby' && gameMetaData && gameMetaData.startedAt) {
+                props.history.push('/game/' + gameID);
+            }
+        };
     }, [stage, gameID, gameMetaData, myID]);
 
     return (
@@ -124,6 +147,7 @@ function MainMenu(props) {
             <h1 className={styles.MainMenuTitle}>
                 {title}
             </h1>
+            {stage}
             {stageData}
         </div>
     );

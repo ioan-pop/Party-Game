@@ -32,6 +32,7 @@ let dbFunctions = () => {
             });
         },
         joinGame: (gameID, player) => {
+            // TODO: Don't let new player join if the game as started (ie there is a startedAt time)
             fbRealtimeDB.ref('activeGames/' + gameID + '/players').once('value', (snapshot) => {
                 // TODO: Figure out a way to implement concurrency. Maybe last updated timestamp
                 let currentUsers = snapshot.val();
@@ -42,8 +43,31 @@ let dbFunctions = () => {
                 );
             });
         },
+        startGame: (gameID) => {
+            fbRealtimeDB.ref('activeGames/' + gameID).once('value', (snapshot) => {
+                let gameSnapshot = snapshot.val();
+                gameSnapshot.startedAt = +new Date();
+                gameSnapshot.turnsLeft = 20;
+
+                fbRealtimeDB.ref('activeGames/' + gameID).set(
+                    gameSnapshot
+                );
+            });
+        },
+        setCards: (gameID, playerID, playersHand) => {
+            fbRealtimeDB.ref('activeGames/' + gameID + '/players').once('value', (snapshot) => {
+                let currentUsers = snapshot.val();
+                let playerIndex = currentUsers.findIndex(user => {
+                    return user.id === playerID;
+                });
+                currentUsers[playerIndex].cards = playersHand;
+
+                fbRealtimeDB.ref('activeGames/' + gameID + '/players').set(
+                    currentUsers
+                );
+            });
+        },
         getMetaUpdates: (gameID, cb) => {
-            // TODO: Rename variables and plug in game id
             fbRealtimeDB.ref('activeGames/' + gameID).on('value', (snapshot) => {
                 cb(snapshot.val());
             });
