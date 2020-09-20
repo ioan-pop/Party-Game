@@ -123,6 +123,28 @@ let dbFunctions = () => {
                     );
                 }
             });
+        },
+        answerQuestion: (gameID, playerID, answer) => {
+            return new Promise((resolve, reject) => {
+                fbRealtimeDB.ref('activeGames/' + gameID + '/currentTurn/answers').once('value', (snapshot) => {
+                    let currentTurnAnswers = snapshot.val();
+    
+                    if (!currentTurnAnswers) {
+                        currentTurnAnswers = [{playerID, data: answer}];
+                    } else {
+                        currentTurnAnswers.push({playerID, data: answer});
+                    }
+    
+                    // TODO: Prevent the user from answering twice
+                    fbRealtimeDB.ref('activeGames/' + gameID + '/currentTurn/answers').set(
+                        currentTurnAnswers
+                    ).then(() => {
+                        resolve();
+                    }).catch(error => {
+                        reject(error);
+                    });
+                });
+            });
         }
     }
 };

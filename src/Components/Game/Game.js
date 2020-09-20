@@ -47,6 +47,12 @@ function Game(props) {
         }
     }, [dataLoaded]);
 
+    useEffect(() => {
+        if ((countdown <= 0) && (gameMetaData.currentTurn.player.id === sessionStorage.getItem('playerID'))) {
+            // TODO: Go next turn
+        }
+    }, [countdown]);
+
     let gameDataChange = (gameData) => {
         let firstNoCardPlayerIndex = gameData.players.findIndex(playerData => playerData.cards === undefined);
         let playerID = sessionStorage.getItem('playerID');
@@ -87,7 +93,7 @@ function Game(props) {
 
         if (currentTurnPlayerID === myID) {
             setMyTurn(true);
-            let questionIndex = Math.floor(Math.random() * (questionCards.length))
+            let questionIndex = Math.floor(Math.random() * (questionCards.length));
             db().setCurrentTurnQuestion(gameData.gameID, questionCards[questionIndex].data);
         }
     };
@@ -103,14 +109,24 @@ function Game(props) {
         let currentAnswer = pCards[index];
         
         if(currentAnswer.selected) {
-            // TODO: Add answer to db object
-            // TODO: Remove card and pick a new card
+            db().answerQuestion(gameMetaData.gameID, sessionStorage.getItem('playerID'), currentAnswer.data).then(() => {
+                delete pCards[index].selected;
+                
+                // Gets all available cards that are not in the hand
+                let availableCards = answerCards.filter(card => pCards.findIndex(pCard => pCard.data === card.data) === -1);
+                
+                pCards.splice(index, 1);
+                pCards.push(availableCards[Math.floor(Math.random() * (availableCards.length))]);
+
+                db().setCards(gameMetaData.gameID, sessionStorage.getItem('playerID'), pCards);
+
+                setPlayerCards(pCards);                
+            });
         } else {
             pCards.map(a => delete a.selected);
             currentAnswer.selected = true;
+            setPlayerCards(pCards);
         }
-
-        setPlayerCards(pCards);
     };
 
     let cancelSelect = (index) => {
@@ -149,7 +165,9 @@ function Game(props) {
                                 gameMetaData.currentTurn.answers.map((answer, index) => (
                                     <div key={index} className={styles.playerCard}>
                                         <div className={styles.playerCardText}>
-                                            {answer}
+                                            <span className={styles.selectedCardText}>
+                                                {answer.data}
+                                            </span>
                                         </div>
                                     </div>
                                 )) : 
