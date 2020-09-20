@@ -1,0 +1,17 @@
+.notification {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    background-color: #f1c40f;
+    z-index: 1000;
+    padding: 10px 30px;
+    border-radius: 5px;
+    font-size: 0.8em;
+    box-shadow: 0px 0px 20px #f1c40f;
+    transition: 0.3s;
+    transform: translateX(-50%) scale(0);
+}
+
+.activeNotification {
+    transform: translateX(-50%) scale(1);
+}

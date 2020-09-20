@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import db from '../../Utilities/db';
 import styles from './Game.module.css';
 import { withRouter } from 'react-router-dom';
+import Notification from '../Notification/Notification';
 
 function Game(props) {
     const [dataLoaded, setDataLoaded] = useState(false);
@@ -11,6 +12,8 @@ function Game(props) {
     const [playerCards, setPlayerCards] = useState();
     const [gameMetaData, setGameMetaData] = useState();
     const [myTurn, setMyTurn] = useState(false);
+    const [canPickCard, setCanPickCard] = useState(true);
+    const [notification, setNotification] = useState({text: ''});
 
     let countdownInterval = undefined;
 
@@ -53,6 +56,14 @@ function Game(props) {
         }
     }, [countdown]);
 
+    // useEffect(() => {
+    //     if(notification.show) {
+    //         setTimeout(() => {
+    //             setNotification({text: notification.text, show: false});
+    //         }, 2000);
+    //     }
+    // }, [notification]);
+
     let gameDataChange = (gameData) => {
         let firstNoCardPlayerIndex = gameData.players.findIndex(playerData => playerData.cards === undefined);
         let playerID = sessionStorage.getItem('playerID');
@@ -76,6 +87,7 @@ function Game(props) {
         }
         
         checkIfMyTurn(gameData);
+        checkIfCanPickCard(gameData);
     };
 
     let startCountdown = (gameData) => {
@@ -98,6 +110,10 @@ function Game(props) {
         }
     };
 
+    let checkIfCanPickCard = (gameData) => {
+        setCanPickCard(gameData.currentTurn.answers.findIndex(answer => answer.playerID === sessionStorage.getItem('playerID')) === -1);
+    };
+
     let getGameID = () => {
         let pathNameSplit = props.location.pathname.split('/');
         let gameID = pathNameSplit[pathNameSplit.length - 1];
@@ -105,27 +121,31 @@ function Game(props) {
     }
 
     let answerQuestion = (index) => {
-        let pCards = [...playerCards];
-        let currentAnswer = pCards[index];
-        
-        if(currentAnswer.selected) {
-            db().answerQuestion(gameMetaData.gameID, sessionStorage.getItem('playerID'), currentAnswer.data).then(() => {
-                delete pCards[index].selected;
-                
-                // Gets all available cards that are not in the hand
-                let availableCards = answerCards.filter(card => pCards.findIndex(pCard => pCard.data === card.data) === -1);
-                
-                pCards.splice(index, 1);
-                pCards.push(availableCards[Math.floor(Math.random() * (availableCards.length))]);
-
-                db().setCards(gameMetaData.gameID, sessionStorage.getItem('playerID'), pCards);
-
-                setPlayerCards(pCards);                
-            });
+        if(canPickCard) {
+            let pCards = [...playerCards];
+            let currentAnswer = pCards[index];
+            
+            if(currentAnswer.selected) {
+                db().answerQuestion(gameMetaData.gameID, sessionStorage.getItem('playerID'), currentAnswer.data).then(() => {
+                    delete pCards[index].selected;
+                    
+                    // Gets all available cards that are not in the hand
+                    let availableCards = answerCards.filter(card => pCards.findIndex(pCard => pCard.data === card.data) === -1);
+                    
+                    pCards.splice(index, 1);
+                    pCards.push(availableCards[Math.floor(Math.random() * (availableCards.length))]);
+    
+                    db().setCards(gameMetaData.gameID, sessionStorage.getItem('playerID'), pCards);
+    
+                    setPlayerCards(pCards);                
+                });
+            } else {
+                pCards.map(a => delete a.selected);
+                currentAnswer.selected = true;
+                setPlayerCards(pCards);
+            }
         } else {
-            pCards.map(a => delete a.selected);
-            currentAnswer.selected = true;
-            setPlayerCards(pCards);
+            setNotification({text: 'Already picked a card!'});
         }
     };
 
@@ -134,9 +154,10 @@ function Game(props) {
         delete pCards[index].selected;
         setPlayerCards(pCards);
     };
-
+    
     return (
         <div>
+            <Notification text={notification.text}/>
             <h1>Game</h1>
             {dataLoaded ? (
                 <div>
