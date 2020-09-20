@@ -3,6 +3,7 @@ import db from '../../Utilities/db';
 import styles from './Game.module.css';
 import { withRouter } from 'react-router-dom';
 import Notification from '../Notification/Notification';
+import usePrevious from '../UsePrevious/UsePrevious';
 
 function Game(props) {
     const [dataLoaded, setDataLoaded] = useState(false);
@@ -15,6 +16,7 @@ function Game(props) {
     const [canPickCard, setCanPickCard] = useState(true);
     const [notification, setNotification] = useState({text: ''});
     const [answers, setAnswers] = useState();
+    const previousGameMetaData = usePrevious(gameMetaData);
 
     let countdownInterval = undefined;
 
@@ -57,6 +59,7 @@ function Game(props) {
                 db().setCurrentTurnPickPhase(gameMetaData.gameID);
             } else {
                 // TODO: End turn
+                console.log('end turn');
             }
         }
     }, [countdown]);
@@ -68,6 +71,16 @@ function Game(props) {
     }, [notification]);
 
     useEffect(() => {
+        if(previousGameMetaData && (previousGameMetaData.currentTurn.player.id !== gameMetaData.currentTurn.player.id)) {
+            console.log('reset turn');
+            setCountdown(gameMetaData.turnTimeLimit);
+            setPlayerCards();
+            setMyTurn(false);
+            setCanPickCard(true);
+            setAnswers();
+            clearInterval(countdownInterval);            
+        }
+
         if(gameMetaData && gameMetaData.currentTurn.pickPhaseStarted) {
             let secondsDiff = parseInt((gameMetaData.currentTurn.pickPhaseStarted / 1000 + gameMetaData.pickPhaseTimeLimit) - +new Date()/1000);
             setCountdown(secondsDiff <= 0 ? 0 : secondsDiff);

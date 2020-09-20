@@ -55,8 +55,10 @@ let dbFunctions = () => {
                 let gameSnapshot = snapshot.val();
                 gameSnapshot.startedAt = +new Date();
                 gameSnapshot.turnsLeft = 20;
-                gameSnapshot.turnTimeLimit = 60;
-                gameSnapshot.pickPhaseTimeLimit = 15;
+                // gameSnapshot.turnTimeLimit = 60;
+                // gameSnapshot.pickPhaseTimeLimit = 15;
+                gameSnapshot.turnTimeLimit = 30;
+                gameSnapshot.pickPhaseTimeLimit = 30;
                 gameSnapshot.currentTurn.startTime = +new Date();
 
                 fbRealtimeDB.ref('activeGames/' + gameID).set(
@@ -158,7 +160,6 @@ let dbFunctions = () => {
             });
         },
         pickTurnWinner: (gameID, currentTurnPlayerID, playerID) => {
-            console.log(gameID, playerID);
             fbRealtimeDB.ref('activeGames/' + gameID).once('value', (snapshot) => {
                 let activeGameData = snapshot.val();
                 let winnerIndex = activeGameData.players.findIndex(player => player.id === playerID);
