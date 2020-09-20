@@ -71,13 +71,42 @@
     flex: 0 0 150px;
     box-shadow: 5px 5px 0px #9b59b6;
     border: 1px solid black;
+    cursor: pointer;
+    overflow: hidden;
 }
 
 .playerCardText {
+    height: 100%;
+    font-size: 0.8em;
+}
+
+.selectedCard {
+    height: 100%;
+}
+
+.cardsHandPlaceholder {
+    width: 100%;
+    margin: 90px 0px;
+}
+
+.selectedCardNo, .selectedCardYes {
+    height: 50%;
+    position: relative;
+    color: white;    
+}
+
+.selectedCardNo {
+    background-color: #e74c3c;
+}
+
+.selectedCardYes {
+    background-color: #3498db;
+}
+
+.selectedCardText {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 100%;
     transform: translate(-50%, -50%);
-    font-size: 0.8em;
+    width: 100%;
 }

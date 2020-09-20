@@ -114,11 +114,14 @@ let dbFunctions = () => {
         setCurrentTurnQuestion: (gameID, question) => {
             fbRealtimeDB.ref('activeGames/' + gameID + '/currentTurn').once('value', (snapshot) => {
                 let currentTurnData = snapshot.val();
-                currentTurnData.question = question;
 
-                fbRealtimeDB.ref('activeGames/' + gameID + '/currentTurn').set(
-                    currentTurnData
-                );
+                if(!currentTurnData.question) {
+                    currentTurnData.question = question;
+
+                    fbRealtimeDB.ref('activeGames/' + gameID + '/currentTurn').set(
+                        currentTurnData
+                    );
+                }
             });
         }
     }

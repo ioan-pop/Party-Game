@@ -98,6 +98,27 @@ function Game(props) {
         return gameID;
     }
 
+    let answerQuestion = (index) => {
+        let pCards = [...playerCards];
+        let currentAnswer = pCards[index];
+        
+        if(currentAnswer.selected) {
+            // TODO: Add answer to db object
+            // TODO: Remove card and pick a new card
+        } else {
+            pCards.map(a => delete a.selected);
+            currentAnswer.selected = true;
+        }
+
+        setPlayerCards(pCards);
+    };
+
+    let cancelSelect = (index) => {
+        let pCards = [...playerCards];
+        delete pCards[index].selected;
+        setPlayerCards(pCards);
+    };
+
     return (
         <div>
             <h1>Game</h1>
@@ -132,16 +153,33 @@ function Game(props) {
                                         </div>
                                     </div>
                                 )) : 
-                                <div style={{width: "100%", marginTop: "20px"}}>Players are picking answers...</div>
+                                <div className={styles.cardsHandPlaceholder}>Players are picking answers...</div>
                             ): (
                                 playerCards ?
                                 playerCards.map((card, index) => (
                                     <div key={index} className={styles.playerCard}>
-                                        <div className={styles.playerCardText}>
-                                            {card.data}
-                                        </div>
+                                        {
+                                            card.selected ?
+                                            <div className={styles.selectedCard}>
+                                                <div className={styles.selectedCardNo} onClick={() => {cancelSelect(index)}}>
+                                                    <span className={styles.selectedCardText}>
+                                                        Cancel
+                                                    </span>
+                                                </div>
+                                                <div className={styles.selectedCardYes} onClick={() => {answerQuestion(index)}}>
+                                                    <span className={styles.selectedCardText}>
+                                                        Select
+                                                    </span>
+                                                </div>
+                                            </div> :
+                                            <div className={styles.playerCardText} onClick={() => {answerQuestion(index)}}>
+                                                <span className={styles.selectedCardText}>
+                                                    {card.data}
+                                                </span>
+                                            </div>
+                                        }
                                     </div>
-                                )) : <div style={{width: "100%", marginTop: "20px"}}>Loading your cards...</div>
+                                )) : <div className={styles.cardsHandPlaceholder}>Loading your cards...</div>
                             )
                         }
                     </div>
