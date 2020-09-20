@@ -14,6 +14,7 @@ function Game(props) {
     const [myTurn, setMyTurn] = useState(false);
     const [canPickCard, setCanPickCard] = useState(true);
     const [notification, setNotification] = useState({text: ''});
+    const [answers, setAnswers] = useState();
 
     let countdownInterval = undefined;
 
@@ -52,17 +53,26 @@ function Game(props) {
 
     useEffect(() => {
         if ((countdown <= 0) && (gameMetaData.currentTurn.player.id === sessionStorage.getItem('playerID'))) {
-            // TODO: Go next turn
+            if (!(gameMetaData.currentTurn.pickPhaseStarted)) {
+                db().setCurrentTurnPickPhase(gameMetaData.gameID);
+            } else {
+                // TODO: End turn
+            }
         }
     }, [countdown]);
 
-    // useEffect(() => {
-    //     if(notification.show) {
-    //         setTimeout(() => {
-    //             setNotification({text: notification.text, show: false});
-    //         }, 2000);
-    //     }
-    // }, [notification]);
+    useEffect(() => {
+        if(notification.text) {
+            setNotification({text: ''});
+        }
+    }, [notification]);
+
+    useEffect(() => {
+        if(gameMetaData && gameMetaData.currentTurn.pickPhaseStarted) {
+            let secondsDiff = parseInt((gameMetaData.currentTurn.pickPhaseStarted / 1000 + gameMetaData.pickPhaseTimeLimit) - +new Date()/1000);
+            setCountdown(secondsDiff <= 0 ? 0 : secondsDiff);
+        }
+    }, [gameMetaData]);
 
     let gameDataChange = (gameData) => {
         let firstNoCardPlayerIndex = gameData.players.findIndex(playerData => playerData.cards === undefined);
@@ -81,6 +91,7 @@ function Game(props) {
         }
 
         setGameMetaData(gameData);
+        setAnswers(gameData.currentTurn.answers);
 
         if(!countdownInterval) {
             startCountdown(gameData);
@@ -91,8 +102,13 @@ function Game(props) {
     };
 
     let startCountdown = (gameData) => {
-        let secondsDiffToEndOfTurn = parseInt((gameData.currentTurn.startTime / 1000 + gameData.turnTimeLimit) - +new Date()/1000);
-        setCountdown(secondsDiffToEndOfTurn <= 0 ? 0 : secondsDiffToEndOfTurn);
+        // If the current round is in the pick phase, set the countdown relative to that
+        // otherwise set it relative to the start of turn timestamp
+        let secondsDiff = gameData.currentTurn.pickPhaseStarted ? 
+            parseInt((gameData.currentTurn.pickPhaseStarted / 1000 + gameData.pickPhaseTimeLimit) - +new Date()/1000) :
+            parseInt((gameData.currentTurn.startTime / 1000 + gameData.turnTimeLimit) - +new Date()/1000);
+
+        setCountdown(secondsDiff <= 0 ? 0 : secondsDiff);
 
         countdownInterval = setInterval(() => {
             setCountdown(prevState => prevState <= 0 ? 0 : prevState - 1);
@@ -111,7 +127,15 @@ function Game(props) {
     };
 
     let checkIfCanPickCard = (gameData) => {
-        setCanPickCard(gameData.currentTurn.answers.findIndex(answer => answer.playerID === sessionStorage.getItem('playerID')) === -1);
+        if(gameData.currentTurn.pickPhaseStarted) {
+            setCanPickCard(false);
+        } else {
+            if(!gameData.currentTurn.answers) {
+                setCanPickCard(true);
+            } else {
+                setCanPickCard(gameData.currentTurn.answers.findIndex(answer => answer.playerID === sessionStorage.getItem('playerID')) === -1);
+            }
+        }
     };
 
     let getGameID = () => {
@@ -145,7 +169,28 @@ function Game(props) {
                 setPlayerCards(pCards);
             }
         } else {
-            setNotification({text: 'Already picked a card!'});
+            if (gameMetaData.currentTurn.pickPhaseStarted) {
+                setNotification({text: 'Can\'t answer during pick phase!'});
+            } else {
+                setNotification({text: 'Already picked a card this turn!'});
+            }
+        }
+    };
+
+    let pickWinner = (index) => {
+        if (gameMetaData.currentTurn.pickPhaseStarted) {
+            let aCards = [...answers];
+            let currentPick = aCards[index];
+            
+            if(currentPick.selected) {
+                db().pickTurnWinner(gameMetaData.gameID, sessionStorage.getItem('playerID'), currentPick.playerID);
+            } else {
+                aCards.map(a => delete a.selected);
+                currentPick.selected = true;
+                setAnswers(aCards);
+            }
+        } else {
+            setNotification({text: 'Can\'t pick a winner until pick phase!'});
         }
     };
 
@@ -154,7 +199,13 @@ function Game(props) {
         delete pCards[index].selected;
         setPlayerCards(pCards);
     };
-    
+
+    let cancelPick = (index) => {
+        let aCards = [...answers];
+        delete aCards[index].selected;
+        setAnswers(aCards);
+    };
+
     return (
         <div>
             <Notification text={notification.text}/>
@@ -169,6 +220,9 @@ function Game(props) {
                         <div style={{marginTop: "25px", fontSize: "2em"}} className={countdown <= 5 ? 'redText' : null}>
                             {countdown}
                         </div>
+                        <div style={{marginTop: "20px"}}>
+                            {gameMetaData && gameMetaData.currentTurn.pickPhaseStarted ? 'Pick phase' : 'Answer phase'}
+                        </div>
                     </div>
                     <div className={styles.activeCard}>
                         <div className={styles.activeCardText}>
@@ -182,14 +236,29 @@ function Game(props) {
                         {
                             myTurn ?
                             (
-                                gameMetaData.currentTurn.answers && gameMetaData.currentTurn.answers.length ? 
-                                gameMetaData.currentTurn.answers.map((answer, index) => (
+                                gameMetaData && answers && answers.length ? 
+                                answers.map((answer, index) => (
                                     <div key={index} className={styles.playerCard}>
-                                        <div className={styles.playerCardText}>
-                                            <span className={styles.selectedCardText}>
-                                                {answer.data}
-                                            </span>
-                                        </div>
+                                        {
+                                            answer.selected ? 
+                                            <div className={styles.selectedCard}>
+                                                <div className={styles.selectedCardNo} onClick={() => {cancelPick(index)}}>
+                                                    <span className={styles.selectedCardText}>
+                                                        Cancel
+                                                    </span>
+                                                </div>
+                                                <div className={styles.selectedCardYes} onClick={() => {pickWinner(index)}}>
+                                                    <span className={styles.selectedCardText}>
+                                                        Select
+                                                    </span>
+                                                </div>
+                                            </div> :
+                                            <div className={styles.playerCardText} onClick={() => {pickWinner(index)}}>
+                                                <span className={styles.selectedCardText}>
+                                                    {answer.data}
+                                                </span>
+                                            </div>
+                                        }
                                     </div>
                                 )) : 
                                 <div className={styles.cardsHandPlaceholder}>Players are picking answers...</div>

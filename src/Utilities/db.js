@@ -55,7 +55,8 @@ let dbFunctions = () => {
                 let gameSnapshot = snapshot.val();
                 gameSnapshot.startedAt = +new Date();
                 gameSnapshot.turnsLeft = 20;
-                gameSnapshot.turnTimeLimit = 120;
+                gameSnapshot.turnTimeLimit = 60;
+                gameSnapshot.pickPhaseTimeLimit = 15;
                 gameSnapshot.currentTurn.startTime = +new Date();
 
                 fbRealtimeDB.ref('activeGames/' + gameID).set(
@@ -144,6 +145,44 @@ let dbFunctions = () => {
                         reject(error);
                     });
                 });
+            });
+        },
+        setCurrentTurnPickPhase: (gameID) => {
+            fbRealtimeDB.ref('activeGames/' + gameID + '/currentTurn').once('value', (snapshot) => {
+                let currentTurnData = snapshot.val();
+                currentTurnData.pickPhaseStarted = +new Date();
+
+                fbRealtimeDB.ref('activeGames/' + gameID + '/currentTurn').set(
+                    currentTurnData
+                );
+            });
+        },
+        pickTurnWinner: (gameID, currentTurnPlayerID, playerID) => {
+            console.log(gameID, playerID);
+            fbRealtimeDB.ref('activeGames/' + gameID).once('value', (snapshot) => {
+                let activeGameData = snapshot.val();
+                let winnerIndex = activeGameData.players.findIndex(player => player.id === playerID);
+                let currentPlayerIndex = activeGameData.players.findIndex(player => player.id === currentTurnPlayerID);
+                let nextPlayerIndex = currentPlayerIndex === activeGameData.players.length - 1 ? 0 : currentPlayerIndex + 1;
+                
+                // Increment points of the winner
+                activeGameData.players[winnerIndex].points = activeGameData.players[winnerIndex].points ? activeGameData.players[winnerIndex].points + 1 : 1;
+                
+                // Reset current turn metadata
+                activeGameData.currentTurn = {
+                    player: {
+                        id: activeGameData.players[nextPlayerIndex].id,
+                        name: activeGameData.players[nextPlayerIndex].name,
+                    },
+                    startTime: +new Date()
+                };
+
+                activeGameData.turnsLeft = activeGameData.turnsLeft - 1;
+                // TODO: End the game
+
+                fbRealtimeDB.ref('activeGames/' + gameID).set(
+                    activeGameData
+                );
             });
         }
     }
