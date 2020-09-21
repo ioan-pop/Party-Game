@@ -8,19 +8,19 @@ I made this game to implement react hooks and firebase firestore/realtime databa
 ## How to use
 
 ### As host
-Create game
-Share game id with friends
+Create game  
+Share game id with friends  
 Start once everyone joined
 
 ### As joinee
 Join game by game id
 
 ### As anyone once game starts
-Pick your best card for the question provided
-When it's your turn, pick your favorite answer to award that player a point
+Pick your best card for the question provided  
+When it's your turn, pick your favorite answer to award that player a point  
 First to point limit wins
 
 ## TODOs
-Add settings for turns, and turn timers in pre game lobby
-Input validation for names
+Add settings for turns, and turn timers in pre game lobby  
+Input validation for names  
 Notify everyone of round winner
