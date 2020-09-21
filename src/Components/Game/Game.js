@@ -78,7 +78,7 @@ function Game(props) {
             setMyTurn(false);
             setCanPickCard(true);
             setAnswers();
-            clearInterval(countdownInterval);            
+            clearInterval(countdownInterval);
         }
 
         if(gameMetaData && gameMetaData.currentTurn.pickPhaseStarted) {
@@ -88,6 +88,13 @@ function Game(props) {
     }, [gameMetaData]);
 
     let gameDataChange = (gameData) => {
+        // Game is over, navigate to post game
+        if(!gameData.currentTurn) {
+            props.history.push('/postgame/' + gameData.gameID);
+            clearInterval(countdownInterval);
+            return;
+        }
+
         let firstNoCardPlayerIndex = gameData.players.findIndex(playerData => playerData.cards === undefined);
         let playerID = sessionStorage.getItem('playerID');
         let currentPlayerIndex = gameData.players.findIndex(playerData => playerData.id === playerID);

@@ -54,7 +54,7 @@ let dbFunctions = () => {
             fbRealtimeDB.ref('activeGames/' + gameID).once('value', (snapshot) => {
                 let gameSnapshot = snapshot.val();
                 gameSnapshot.startedAt = +new Date();
-                gameSnapshot.turnsLeft = 20;
+                gameSnapshot.turnsLeft = 2;
                 gameSnapshot.turnTimeLimit = 60;
                 gameSnapshot.pickPhaseTimeLimit = 15;
                 gameSnapshot.currentTurn.startTime = +new Date();
@@ -167,17 +167,20 @@ let dbFunctions = () => {
                 // Increment points of the winner
                 activeGameData.players[winnerIndex].points = activeGameData.players[winnerIndex].points ? activeGameData.players[winnerIndex].points + 1 : 1;
                 
-                // Reset current turn metadata
-                activeGameData.currentTurn = {
-                    player: {
-                        id: activeGameData.players[nextPlayerIndex].id,
-                        name: activeGameData.players[nextPlayerIndex].name,
-                    },
-                    startTime: +new Date()
-                };
-
                 activeGameData.turnsLeft = activeGameData.turnsLeft - 1;
-                // TODO: End the game
+                
+                if (activeGameData.turnsLeft === 0) {
+                    delete activeGameData.currentTurn;
+                } else {
+                    // Reset current turn metadata
+                    activeGameData.currentTurn = {
+                        player: {
+                            id: activeGameData.players[nextPlayerIndex].id,
+                            name: activeGameData.players[nextPlayerIndex].name,
+                        },
+                        startTime: +new Date()
+                    };
+                }
 
                 fbRealtimeDB.ref('activeGames/' + gameID).set(
                     activeGameData

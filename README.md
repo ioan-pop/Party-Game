@@ -19,3 +19,8 @@ Join game by game id
 Pick your best card for the question provided
 When it's your turn, pick your favorite answer to award that player a point
 First to point limit wins
+
+## TODOs
+Add settings for turns, and turn timers in pre game lobby
+Input validation for names
+Notify everyone of round winner
