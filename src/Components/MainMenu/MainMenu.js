@@ -140,7 +140,7 @@ function MainMenu(props) {
                 props.history.push('/game/' + gameID);
             }
         };
-    }, [stage, gameID, gameMetaData, myID]);
+    }, [stage, gameID, gameMetaData, myID, props.history]);
 
     return (
         <div>

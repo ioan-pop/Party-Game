@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import 'firebase/database';
 import 'firebase/firestore';
 
@@ -54,7 +54,7 @@ let dbFunctions = () => {
             fbRealtimeDB.ref('activeGames/' + gameID).once('value', (snapshot) => {
                 let gameSnapshot = snapshot.val();
                 gameSnapshot.startedAt = +new Date();
-                gameSnapshot.turnsLeft = 2;
+                gameSnapshot.turnsLeft = 20;
                 gameSnapshot.turnTimeLimit = 60;
                 gameSnapshot.pickPhaseTimeLimit = 15;
                 gameSnapshot.currentTurn.startTime = +new Date();

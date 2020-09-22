@@ -40,17 +40,16 @@ function Game(props) {
         
         Promise.all(promises).then(() => {
             setDataLoaded(true);
+            db().getMetaUpdates(getGameID(), gameDataChange);
         });
-
-        return () => {
-            clearInterval(countdownInterval);
-        };
+        // eslint-disable-next-line
     }, []);
 
     useEffect(() => {
         if(dataLoaded) {
             db().getMetaUpdates(getGameID(), gameDataChange);
         }
+        // eslint-disable-next-line
     }, [dataLoaded]);
 
     useEffect(() => {
@@ -59,9 +58,11 @@ function Game(props) {
                 db().setCurrentTurnPickPhase(gameMetaData.gameID);
             } else {
                 // TODO: End turn
+                // Turn ends on winner select, so maybe this is not needed
                 console.log('end turn');
             }
         }
+        // eslint-disable-next-line
     }, [countdown]);
 
     useEffect(() => {
@@ -85,6 +86,7 @@ function Game(props) {
             let secondsDiff = parseInt((gameMetaData.currentTurn.pickPhaseStarted / 1000 + gameMetaData.pickPhaseTimeLimit) - +new Date()/1000);
             setCountdown(secondsDiff <= 0 ? 0 : secondsDiff);
         }
+        // eslint-disable-next-line
     }, [gameMetaData]);
 
     let gameDataChange = (gameData) => {
@@ -136,6 +138,9 @@ function Game(props) {
     };
 
     let checkIfMyTurn = (gameData) => {
+        if(!questionCards) {
+            return;
+        }
         let currentTurnPlayerID = gameData.currentTurn.player.id;
         let myID = sessionStorage.getItem('playerID');
 

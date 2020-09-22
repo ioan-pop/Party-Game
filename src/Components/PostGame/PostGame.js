@@ -5,20 +5,20 @@ function PostGame(props) {
     const [leaderboardList, setLeaderboardList] = useState();
 
     useEffect(() => {
+        let getGameID = () => {
+            let pathNameSplit = props.location.pathname.split('/');
+            let gameID = pathNameSplit[pathNameSplit.length - 1];
+            return gameID;
+        }
+        
         db().getMetaUpdates(getGameID(), gameDataChange);
-    }, []);
+    }, [props.location.pathname]);
 
     let gameDataChange = (gameData) => {
         let sortedByPoints = gameData.players.sort((a,b) => (b.points === undefined) ? -1 : (b.points - a.points));
 
         setLeaderboardList(sortedByPoints);
     };
-
-    let getGameID = () => {
-        let pathNameSplit = props.location.pathname.split('/');
-        let gameID = pathNameSplit[pathNameSplit.length - 1];
-        return gameID;
-    }
 
     return (
         <div>
