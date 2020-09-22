@@ -31,16 +31,16 @@ Notify everyone of round winner
 ## Screenshots of game
 
 ### Main Menu
-![Main Menu](Screenshots/mainmenu.PNG)
+![Main Menu](Screenshots/mainmenu.png)
 
 ### Lobby
-![Lobby](Screenshots/lobby.PNG)
+![Lobby](Screenshots/lobby.png)
 
 ### Player View
-![Player View](Screenshots/playerview.PNG)
+![Player View](Screenshots/playerview.png)
 
 ### Pick View
-![Pick View](Screenshots/pickview.PNG)
+![Pick View](Screenshots/pickview.png)
 
 ### Post Game Lobby
-![Post Game Lobby](Screenshots/postgame.PNG)
+![Post Game Lobby](Screenshots/postgame.png)
