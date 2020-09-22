@@ -40,7 +40,6 @@ function Game(props) {
         
         Promise.all(promises).then(() => {
             setDataLoaded(true);
-            db().getMetaUpdates(getGameID(), gameDataChange);
         });
         // eslint-disable-next-line
     }, []);
@@ -138,9 +137,6 @@ function Game(props) {
     };
 
     let checkIfMyTurn = (gameData) => {
-        if(!questionCards) {
-            return;
-        }
         let currentTurnPlayerID = gameData.currentTurn.player.id;
         let myID = sessionStorage.getItem('playerID');
 

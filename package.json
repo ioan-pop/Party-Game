@@ -1,6 +1,6 @@
 {
   "name": "party_game",
-  "homepage": "https://ioan-pop.github.io/Party-Game/",  
+  "homepage": "https://ioan-pop.github.io/Party-Game/", 
   "version": "0.1.0",
   "private": true,
   "dependencies": {

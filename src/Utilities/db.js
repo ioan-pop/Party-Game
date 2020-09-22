@@ -3,11 +3,11 @@ import 'firebase/database';
 import 'firebase/firestore';
 
 var config = {
-	apiKey: process.env.APIKEY,
-	authDomain: process.env.AUTHDOMAIN,
-	databaseURL: process.env.DATABASEURL,
-    storageBucket: process.env.PROJECTID,
-    projectId: process.env.STORAGEBUCKET
+	apiKey: "AAAAyl7O1-c:APA91bHcg_n9IfCQ-2ZlUpV-XyA4DO0edIATym5QZjKmK31FzY-FZGtNu0BatRh-MLMU2UWeXAgHS6K5ovZ1TDD-D67nTJUQNurEdk4VHWBzk7nINLxXgv1I0fsFvpmsTNfdJpgsK9Ur",
+	authDomain: "party-game-ip.firebaseapp.com",
+	databaseURL: "https://party-game-ip.firebaseio.com/",
+    storageBucket: "party-game-ip.appspot.com",
+    projectId: "party-game-ip"
 };
 
 firebase.initializeApp(config);
