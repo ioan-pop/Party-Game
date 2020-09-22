@@ -4,6 +4,7 @@ This is a card based party game where one player gets a question and everyone el
 The player with the question can then pick which one is their favorite and that player gets a point.
 
 I made this game to implement react hooks and firebase firestore/realtime database.
+[Check it out!](https://ioan-pop.github.io/Party-Game/)
 
 ## How to use
 
