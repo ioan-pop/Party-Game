@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/Party-Game/static/css/main.b4fd9e2b.chunk.css",
-    "main.js": "/Party-Game/static/js/main.64978f2d.chunk.js",
-    "main.js.map": "/Party-Game/static/js/main.64978f2d.chunk.js.map",
+    "main.js": "/Party-Game/static/js/main.01c9a237.chunk.js",
+    "main.js.map": "/Party-Game/static/js/main.01c9a237.chunk.js.map",
     "runtime-main.js": "/Party-Game/static/js/runtime-main.2ff83781.js",
     "runtime-main.js.map": "/Party-Game/static/js/runtime-main.2ff83781.js.map",
     "static/js/2.20873abd.chunk.js": "/Party-Game/static/js/2.20873abd.chunk.js",
     "static/js/2.20873abd.chunk.js.map": "/Party-Game/static/js/2.20873abd.chunk.js.map",
     "index.html": "/Party-Game/index.html",
-    "precache-manifest.47c076e4df8e93e00029fe4cf45157c1.js": "/Party-Game/precache-manifest.47c076e4df8e93e00029fe4cf45157c1.js",
+    "precache-manifest.1e939497912698359d8c11a50f748361.js": "/Party-Game/precache-manifest.1e939497912698359d8c11a50f748361.js",
     "service-worker.js": "/Party-Game/service-worker.js",
     "static/css/main.b4fd9e2b.chunk.css.map": "/Party-Game/static/css/main.b4fd9e2b.chunk.css.map",
     "static/js/2.20873abd.chunk.js.LICENSE.txt": "/Party-Game/static/js/2.20873abd.chunk.js.LICENSE.txt"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.2ff83781.js",
     "static/js/2.20873abd.chunk.js",
     "static/css/main.b4fd9e2b.chunk.css",
-    "static/js/main.64978f2d.chunk.js"
+    "static/js/main.01c9a237.chunk.js"
   ]
 }
