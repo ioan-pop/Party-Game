@@ -3,12 +3,12 @@ import './App.css';
 import MainMenu from './Components/MainMenu/MainMenu';
 import Game from './Components/Game/Game';
 import PostGame from './Components/PostGame/PostGame';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { HashRouter, Route, Switch } from 'react-router-dom';
 
 // TODO: Remove the app component and include the main menu inside index.js
 function App() {
 	return (
-		<BrowserRouter>
+		<HashRouter>
 			<div className="App">
 				<Switch>
 					<Route path="/postgame" component={PostGame} />
@@ -16,7 +16,7 @@ function App() {
 					<Route path="/" component={MainMenu} />
 				</Switch>
 			</div>
-		</BrowserRouter>
+		</HashRouter>
 	);
 }
 
