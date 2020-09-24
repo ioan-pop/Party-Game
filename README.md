@@ -28,7 +28,8 @@ Add settings for turns, and turn timers in pre game lobby
 Input validation for names  
 Notify everyone of round winner  
 End answer turn when everyone submits an answer  
-Prevent duplicate cards for player (maybe by shuffling the deck and additing the id's to the current game)
+Prevent duplicate cards for player (maybe by shuffling the deck and additing the id's to the current game)  
+Add a action history to show what happened each turn
 
 ## Screenshots of game
 
