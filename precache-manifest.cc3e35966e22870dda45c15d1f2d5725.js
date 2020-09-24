@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "19d243467a2dd5e61f07bd33d38e5b6b",
+    "revision": "56a63cba5941a9ddff4c04be1fae6d26",
     "url": "/Party-Game/index.html"
   },
   {
-    "revision": "e89f3dd106c604efcace",
+    "revision": "3e91f9f8f5ed8ad841f6",
     "url": "/Party-Game/static/css/main.d2c3e089.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/Party-Game/static/js/2.a361b1d1.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "e89f3dd106c604efcace",
-    "url": "/Party-Game/static/js/main.2e20b31f.chunk.js"
+    "revision": "3e91f9f8f5ed8ad841f6",
+    "url": "/Party-Game/static/js/main.f5cba17c.chunk.js"
   },
   {
     "revision": "23343d66162c83cc753a",
