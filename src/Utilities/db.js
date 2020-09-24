@@ -54,7 +54,7 @@ let dbFunctions = () => {
                 let gameSnapshot = snapshot.val();
                 gameSnapshot.startedAt = +new Date();
                 gameSnapshot.turnsLeft = 20;
-                gameSnapshot.turnTimeLimit = 60;
+                gameSnapshot.turnTimeLimit = 30;
                 gameSnapshot.pickPhaseTimeLimit = 15;
                 gameSnapshot.currentTurn.startTime = +new Date();
 
